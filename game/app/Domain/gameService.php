@@ -7,10 +7,49 @@
  */
 
 namespace App\Domain;
+use App\Grid;
 
 
 class gameService
 {
+    public function createGrid($request){
+        $x = $request->x;
+        $y = $request->y;
+        $data = $request->data;
+        $gridArray = [[]];
+        for ($i = 0; $i < $x; $i++) {
+            for ($j = 0; $j < $y; $j++) {
+                $gridArray[$i][$j] = $data[$i][$j];
+            }
+        }
+        $success = Grid::create([
+            'x' => $request->x,
+            'y' => $request->y,
+            'data' => json_encode($gridArray)
+        ]);
+        return $success;
+
+    }
+
+    public function updateGrid($request, $id){
+        $grid = Grid::find($id);
+        $grid->x = $request->x;
+        $grid->y = $request->y;
+        $data = $request->data;
+        $gridArray = [[]];
+        for ($i = 0; $i < $grid->x; $i++) {
+            for ($j = 0; $j < $grid->y; $j++) {
+                $gridArray[$i][$j] = $data[$i][$j];
+            }
+        }
+        $grid->data = json_encode($gridArray);
+        $grid->save();
+
+        return $grid;
+    }
+    public function findGrid($id){
+        return Grid::find($id);
+    }
     public function getGenerations($generation, $grid){
         $requestedGenerations = [];
         $generations = explode(',', $generation);
