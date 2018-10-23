@@ -28,6 +28,7 @@ class gameController extends Controller
 
         if ($success) {
             $response = [];
+            $response['id'] = $success->id;
             $response['x'] = $request->x;
             $response['y'] = $request->y;
             $response['data'] = $gridArray;
