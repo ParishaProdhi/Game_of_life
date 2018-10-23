@@ -26,7 +26,6 @@ class gameController extends Controller
             'data' => json_encode($gridArray)
         ]);
 
-        $response = [];
         if ($success) {
             $response = [];
             $response['x'] = $request->x;
@@ -40,7 +39,8 @@ class gameController extends Controller
 
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $grid = Grid::find($id);
         $grid->x = $request->x;
         $grid->y = $request->y;
@@ -55,5 +55,98 @@ class gameController extends Controller
         $grid->save();
         $success = '{}';
         return $success;
+    }
+
+    public function show($id)
+    {
+        $grid = Grid::find($id);
+        if (isset($_GET['after'])) {
+            $x = $grid->x;
+            $y = $grid->y;
+            $data = json_decode($grid->data);
+            $newGenGrid = [[]];
+            $gen = 2;
+            $k = 0;
+            while($k< $gen) {
+                for ($i = 0; $i < $x; $i++) {
+                    for ($j = 0; $j < $y; $j++) {
+                        $count = 0;
+                        if ($i != 0 && $j != 0) {
+                            if ($data[$i - 1][$j - 1] == 1) {
+                                $count++;
+                            }
+                        }
+                        if ($i != 0) {
+                            if ($data[$i - 1][$j] == 1) {
+                                $count++;
+                            }
+                        }
+                        if ($i != 0 && $j != $y - 1) {
+                            if ($data[$i - 1][$j + 1] == 1) {
+                                $count++;
+                            }
+                        }
+                        if ($j != 0) {
+                            if ($data[$i][$j - 1] == 1) {
+                                $count++;
+                            }
+                        }
+
+                        if ($j != $y - 1) {
+                            if ($data[$i][$j + 1] == 1) {
+                                $count++;
+                            }
+                        }
+
+                        if ($i != $x - 1 && $j != 0) {
+                            if ($data[$i + 1][$j - 1] == 1) {
+                                $count++;
+                            }
+                        }
+                        if ($i != $x - 1) {
+                            if ($data[$i + 1][$j] == 1 && ($i + 1) >= 0 && ($j) >= 0 && ($i + 1) < $x && ($j) < $y) {
+                                $count++;
+                            }
+                        }
+
+                        if ($i != $x - 1 && $j != $y - 1) {
+                            if ($data[$i + 1][$j + 1] == 1 && ($i + 1) >= 0 && ($j + 1) >= 0 && ($i + 1) < $x && ($j + 1) < $y) {
+                                $count++;
+
+                            }
+                        }
+
+                        $newGenGrid[$i][$j] = ($count == 3) ? 1 : 0;
+                        $count = 0;
+                    }
+
+                }
+                for ($i = 0; $i < $x; $i++) {
+                    for ($j = 0; $j < $y; $j++) {
+                        $data[$i][$j] = $newGenGrid[$i][$j];
+                    }
+                }
+                $k++;
+            }
+            return json_encode($newGenGrid);
+        } else {
+
+            if ($grid) {
+                $response = [];
+                $response['x'] = $grid->x;
+                $response['y'] = $grid->y;
+                $response['data'] = $grid->data;
+            } else {
+                $response = [];
+                $response['error'] = "Record Not Created";
+            }
+            return json_encode($response);
+        }
+
+    }
+
+    public function showGeneration($id, $age_1, $age_2, $age_3)
+    {
+        dd($id, $age_1, $age_2, $age_3);
     }
 }

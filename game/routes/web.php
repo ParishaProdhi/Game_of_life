@@ -11,7 +11,6 @@
 |
 */
 
-//Route::get('/', 'gameController@index');
 Route::post('/grids', 'gameController@store');
 Route::patch('/grids/{id}', 'gameController@update');
-//Route::get('/grids/{id}', 'gameController@show');
+Route::get('/grids/{id}', 'gameController@show');

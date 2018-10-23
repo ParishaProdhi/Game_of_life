@@ -11,5 +11,5 @@ namespace App\Domain;
 
 class gameService
 {
-
+   
 }
