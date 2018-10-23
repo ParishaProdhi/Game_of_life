@@ -28,12 +28,14 @@ class gameController extends Controller
 
         if ($success) {
             $response = [];
+            $response['status'] = http_response_code();
             $response['id'] = $success->id;
             $response['x'] = $request->x;
             $response['y'] = $request->y;
             $response['data'] = $gridArray;
         } else {
             $response = [];
+            $response['status'] = http_response_code();
             $response['error'] = "Record Not Created";
         }
         return json_encode($response);
@@ -54,8 +56,10 @@ class gameController extends Controller
         }
         $grid->data = json_encode($gridArray);
         $grid->save();
-        $success = '{}';
-        return $success;
+        $response =[];
+        $response['status'] = http_response_code();
+        $response['data'] = '{}';
+        return $response;
     }
 
     public function show($id)
@@ -135,6 +139,7 @@ class gameController extends Controller
                 $requestedGenerations[$key] = json_encode($newGenGrid);
             }
             $response = [];
+            $response['status'] = http_response_code();
             $response['x'] = $grid->x;
             $response['y'] = $grid->y;
             $response['data'] = $requestedGenerations;
@@ -144,11 +149,13 @@ class gameController extends Controller
 
             if ($grid) {
                 $response = [];
+                $response['status'] = http_response_code();
                 $response['x'] = $grid->x;
                 $response['y'] = $grid->y;
                 $response['data'] = $grid->data;
             } else {
                 $response = [];
+                $response['status'] = http_response_code();
                 $response['error'] = "Record Not Created";
             }
             return json_encode($response);
