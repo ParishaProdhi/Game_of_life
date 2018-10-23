@@ -8,7 +8,9 @@ use App\Grid;
 
 class gameController extends Controller
 {
-
+    public function __construct(gameService $gameService){
+        $this->gameService = $gameService;
+    }
     public function store(Request $request)
     {
         $x = $request->x;
@@ -66,78 +68,7 @@ class gameController extends Controller
     {
         $grid = Grid::find($id);
         if (isset($_GET['after'])) {
-            $requestedGenerations = [];
-            $generations = explode(',', $_GET['after']);
-            foreach ($generations as $key=>$age){
-                $x = $grid->x;
-                $y = $grid->y;
-                $data = json_decode($grid->data);
-                $newGenGrid = [[]];
-                $gen = $age;
-                $k = 0;
-                while ($k < $gen) {
-                    for ($i = 0; $i < $x; $i++) {
-                        for ($j = 0; $j < $y; $j++) {
-                            $count = 0;
-                            if ($i != 0 && $j != 0) {
-                                if ($data[$i - 1][$j - 1] == 1) {
-                                    $count++;
-                                }
-                            }
-                            if ($i != 0) {
-                                if ($data[$i - 1][$j] == 1) {
-                                    $count++;
-                                }
-                            }
-                            if ($i != 0 && $j != $y - 1) {
-                                if ($data[$i - 1][$j + 1] == 1) {
-                                    $count++;
-                                }
-                            }
-                            if ($j != 0) {
-                                if ($data[$i][$j - 1] == 1) {
-                                    $count++;
-                                }
-                            }
-
-                            if ($j != $y - 1) {
-                                if ($data[$i][$j + 1] == 1) {
-                                    $count++;
-                                }
-                            }
-
-                            if ($i != $x - 1 && $j != 0) {
-                                if ($data[$i + 1][$j - 1] == 1) {
-                                    $count++;
-                                }
-                            }
-                            if ($i != $x - 1) {
-                                if ($data[$i + 1][$j] == 1 && ($i + 1) >= 0 && ($j) >= 0 && ($i + 1) < $x && ($j) < $y) {
-                                    $count++;
-                                }
-                            }
-
-                            if ($i != $x - 1 && $j != $y - 1) {
-                                if ($data[$i + 1][$j + 1] == 1 && ($i + 1) >= 0 && ($j + 1) >= 0 && ($i + 1) < $x && ($j + 1) < $y) {
-                                    $count++;
-
-                                }
-                            }
-
-                            $newGenGrid[$i][$j] = ($count == 3) ? 1 : 0;
-                            $count = 0;
-                        }
-
-                    }
-                    for ($i = 0; $i < $x; $i++) {
-                        for ($j = 0; $j < $y; $j++) {
-                            $data[$i][$j] = $newGenGrid[$i][$j];
-                        }
-                    }
-                    $k++;
-                }
-                $requestedGenerations[$key] = json_encode($newGenGrid);
-            }
+            $requestedGenerations = $this->gameService->getGenerations($_GET['after'], $grid);
             $response = [];
             $response['status'] = http_response_code();
             $response['x'] = $grid->x;
