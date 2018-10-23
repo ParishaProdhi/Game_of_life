@@ -2,45 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Grid;
-use App\Domain\gameService;
 use Illuminate\Http\Request;
+use App\Domain\gameService;
+use App\Grid;
 
 class gameController extends Controller
 {
-    public function __construct(gameService $gameService)
-    {
-        $this->gameService = $gameService;
-    }
-
-    public function index()
-    {
-        $success = $this->gameService->getAll();
-        return $success;
-    }
 
     public function store(Request $request)
     {
-        $success = $this->gameService->createCell($request);
-        return $success;
+        $x = $request->x;
+        $y = $request->y;
+        $data = $request->data;
+        $gridArray = [[]];
+        for ($i = 0; $i < $x; $i++) {
+            for ($j = 0; $j < $y; $j++) {
+                $gridArray[$i][$j] = $data[$i][$j];
+            }
+        }
+        $success = Grid::create([
+            'x' => $request->x,
+            'y' => $request->y,
+            'data' => json_encode($gridArray)
+        ]);
+
+        $response = [];
+        if ($success) {
+            $response = [];
+            $response['x'] = $request->x;
+            $response['y'] = $request->y;
+            $response['data'] = $gridArray;
+        } else {
+            $response = [];
+            $response['error'] = "Record Not Created";
+        }
+        return json_encode($response);
+
     }
 
-    public function update(Request $request, $id)
-    {
-        $success = $this->gameService->updateCell($request, $id);
-        return $success;
-//        $grid = Grid::find($id);
-//        $grid->x = $request->x;
-//        $grid->y = $request->y;
-//        $grid->data = $request->data;
-//        $grid->save();
-//        $success = '{}';
-//        return $success;
-    }
-
-    public function show($id)
-    {
+    public function update(Request $request, $id){
         $grid = Grid::find($id);
-        return $grid;
+        $grid->x = $request->x;
+        $grid->y = $request->y;
+        $data = $request->data;
+        $gridArray = [[]];
+        for ($i = 0; $i < $grid->x; $i++) {
+            for ($j = 0; $j < $grid->y; $j++) {
+                $gridArray[$i][$j] = $data[$i][$j];
+            }
+        }
+        $grid->data = json_encode($gridArray);
+        $grid->save();
+        $success = '{}';
+        return $success;
     }
 }
