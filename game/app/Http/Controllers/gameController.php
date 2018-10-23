@@ -144,9 +144,4 @@ class gameController extends Controller
         }
 
     }
-
-    public function showGeneration($id, $age_1, $age_2, $age_3)
-    {
-        dd($id, $age_1, $age_2, $age_3);
-    }
 }
