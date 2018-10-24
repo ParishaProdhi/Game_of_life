@@ -50,6 +50,8 @@ class gameService
     public function findGrid($id){
         return Grid::find($id);
     }
+    //TODO handle for 0 and negative generations
+    //TODO optimize
     public function getGenerations($generation, $grid){
         $requestedGenerations = [];
         $newGenerationData = [];
@@ -128,5 +130,9 @@ class gameService
         }
 
         return $requestedGenerations;
+    }
+    public function showAllGrids(){
+        $grid = Grid::all();
+        return $grid;
     }
 }

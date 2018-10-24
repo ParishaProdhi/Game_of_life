@@ -26,47 +26,55 @@ int main()
             for(int j=0; j<y; j++)
             {
                 int count = 0;
-                if(grid[i-1][j-1] == 1 && (i-1)>=0 && (j-1)>=0 && (i-1)<x && (j-1)<y)
+                if(grid[i-1][j-1] == 1 && (i-1)>=0 && (j-1)>=0)
                 {
                     count++;
                 }
 
-                if(grid[i-1][j] == 1 && (i-1)>=0 && (j)>=0 && (i-1)<x && (j)<y)
+                if(grid[i-1][j] == 1 && (i-1)>=0)
                 {
                     count++;
                 }
 
-                if(grid[i-1][j+1] == 1 && (i-1)>=0 && (j+1)>=0 && (i-1)<x && (j+1)<y)
+                if(grid[i-1][j+1] == 1 && (i-1)>=0 && (j+1)<y)
                 {
                     count++;
                 }
 
-                if(grid[i][j-1] == 1 && (i)>=0 && (j-1)>=0 && (i)<x && (j-1)<y)
+                if(grid[i][j-1] == 1 && (j-1)>=0)
                 {
                     count++;
                 }
 
-                if(grid[i][j+1] == 1 && (i)>=0 && (j+1)>=0 && (i)<x && (j+1)<y)
+                if(grid[i][j+1] == 1 && (j+1)<y)
                 {
                     count++;
                 }
 
-                if(grid[i+1][j-1] == 1 && (i+1)>=0 && (j-1)>=0 && (i+1)<x && (j-1)<y)
+                if(grid[i+1][j-1] == 1 && (j-1)>=0 && (i+1)<x)
                 {
                     count++;
                 }
 
-                if(grid[i+1][j] == 1 && (i+1)>=0 && (j)>=0 && (i+1)<x && (j)<y)
+                if(grid[i+1][j] == 1 && (i+1)<x)
                 {
                     count++;
                 }
 
-                if(grid[i+1][j+1] == 1 && (i+1)>=0 && (j+1)>=0 && (i+1)<x && (j+1)<y)
+                if(grid[i+1][j+1] == 1 && (i+1)<x && (j+1)<y)
                 {
                     count++;
                 }
-
-                newGenGrid[i][j]=(count== 3) ? 1:0 ;
+                if(grid[i][j] == 1)
+                {
+                    newGenGrid[i][j] = (count == 2 || count ==3 ) ? 1 : 0;
+                }
+                else
+                {
+                    newGenGrid[i][j]=(count== 3) ? 1:0 ;
+                }
+                // newGenGrid[i][j]=(count== 3) ? 1:0 ;
+                //newGenGrid[i][j]=count;
                 count = 0;
             }
 
@@ -80,8 +88,10 @@ int main()
             }
             cout<<endl;
         }
-        for(int i=0;i<x;i++){
-            for(int j=0;j<y;j++){
+        for(int i=0; i<x; i++)
+        {
+            for(int j=0; j<y; j++)
+            {
                 grid[i][j]=newGenGrid[i][j];
             }
         }

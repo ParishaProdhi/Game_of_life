@@ -18,13 +18,14 @@ class gameController extends Controller
         try {
             $response = [];
             $response = $this->gameService->createGrid($request);
-            $response['status'] = http_response_code();
+            $status = 201;
         } catch (\Exception $e) {
             $response = [];
-            $response['status'] = http_response_code();
+            $status = 400;
+//            $response['status'] = $status;
             $response['error'] = "Record Not Created";
         }
-        return json_encode($response);
+        return response()->json($response, $status);
     }
 
     public function update(Request $request, $id)
@@ -33,42 +34,60 @@ class gameController extends Controller
         try {
             $this->gameService->updateGrid($request, $id);
             $response = [];
-            $response['status'] = http_response_code();
-            $response['data'] = '{}';
+            $status = 200;
+            $response['data'] = [];
         } catch (\Exception $e) {
             $response = [];
-            $response['status'] = http_response_code();
+            $status = 400;
+//            $response['status'] = $status;
             $response['error'] = "Record Not Created";
         }
-        return json_encode($response);
+        return response()->json($response, $status);
     }
 
     public function show($id)
     {
-        $grid = $this->gameService->findGrid($id);
-        if (isset($_GET['after'])) {
-            $requestedGenerations = $this->gameService->getGenerations($_GET['after'], $grid);
-            $response = [];
-            $response['status'] = http_response_code();
-            $response['id'] = $grid->id;
-            $response['x'] = $grid->x;
-            $response['y'] = $grid->y;
-            $response['data'] = $requestedGenerations;
-            return $response;
-
-        } else {
-
-            if ($grid) {
+        try {
+            $grid = $this->gameService->findGrid($id);
+            if (isset($_GET['after'])) {
+                $requestedGenerations = $this->gameService->getGenerations($_GET['after'], $grid);
                 $response = [];
-                $response = $grid;
-                $response['status'] = http_response_code();
+                $status = 200;
+//                $response['status'] = $status;
+                $response['id'] = $grid->id;
+                $response['x'] = $grid->x;
+                $response['y'] = $grid->y;
+                $response['data'] = $requestedGenerations;
+
+
             } else {
-                $response = [];
-                $response['status'] = http_response_code();
-                $response['error'] = "Record Not Created";
-            }
-            return json_encode($response);
-        }
 
+                if ($grid) {
+                    $response = [];
+                    $response = $grid;
+                    $status = 200;
+//                    $response['status'] = $status;
+                } else {
+                    $response = [];
+                    $status = 404;
+//                    $response['status'] = $status;
+                    $response['error'] = "Not Found";
+                }
+
+            }
+
+        } catch (\Exception $e) {
+            $response = [];
+            $status = 404;
+//            $response['status'] = $status;
+            $response['error'] = "Not Found";
+        }
+        return response()->json($response, $status);
     }
+
+    public function list()
+    {
+        return $this->gameService->showAllGrids();
+    }
+
 }
