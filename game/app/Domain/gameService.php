@@ -52,6 +52,7 @@ class gameService
     }
     public function getGenerations($generation, $grid){
         $requestedGenerations = [];
+        $newGenerationData = [];
         $generations = explode(',', $generation);
         foreach ($generations as $key=>$age){
             $x = $grid->x;
@@ -121,7 +122,9 @@ class gameService
                 }
                 $k++;
             }
-            $requestedGenerations[$key] = json_encode($newGenGrid);
+            $newGenerationData['age'] = trim($age);
+            $newGenerationData['grid'] = json_encode($newGenGrid);
+            $requestedGenerations[$key] = $newGenerationData;
         }
 
         return $requestedGenerations;

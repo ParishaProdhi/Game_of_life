@@ -49,11 +49,11 @@ class gameController extends Controller
         if (isset($_GET['after'])) {
             $requestedGenerations = $this->gameService->getGenerations($_GET['after'], $grid);
             $response = [];
+            $response['status'] = http_response_code();
             $response['id'] = $grid->id;
             $response['x'] = $grid->x;
             $response['y'] = $grid->y;
             $response['data'] = $requestedGenerations;
-            $response['status'] = http_response_code();
             return $response;
 
         } else {
