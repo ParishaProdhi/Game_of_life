@@ -39,7 +39,6 @@ class gameController extends Controller
         } catch (\Exception $e) {
             $response = [];
             $status = 400;
-//            $response['status'] = $status;
             $response['error'] = "Record Not Created";
         }
         return response()->json($response, $status);
@@ -66,11 +65,9 @@ class gameController extends Controller
                     $response = [];
                     $response = $grid;
                     $status = 200;
-//                    $response['status'] = $status;
                 } else {
                     $response = [];
                     $status = 404;
-//                    $response['status'] = $status;
                     $response['error'] = "Not Found";
                 }
 
@@ -79,7 +76,6 @@ class gameController extends Controller
         } catch (\Exception $e) {
             $response = [];
             $status = 404;
-//            $response['status'] = $status;
             $response['error'] = "Not Found";
         }
         return response()->json($response, $status);

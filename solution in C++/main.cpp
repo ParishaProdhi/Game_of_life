@@ -88,12 +88,23 @@ int main()
             }
             cout<<endl;
         }
+        int compareCount = 0;
         for(int i=0; i<x; i++)
         {
             for(int j=0; j<y; j++)
             {
+                if(grid[i][j] != newGenGrid[i][j]){
                 grid[i][j]=newGenGrid[i][j];
+                }
+                else{
+                compareCount++;
+                }
+
             }
+        }
+        if(compareCount == (x*y)){
+        cout<<endl<<"____Generations are not gonna change from this state____"<<endl<<endl;
+        break;
         }
         k++;
     }
